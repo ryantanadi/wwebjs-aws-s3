@@ -17,15 +17,19 @@ class AwsS3Store {
    * @param {Object} options.getObjectCommand  The GetObjectCommand class from `@aws-sdk/client-s3`.
    * @param {Object} options.deleteObjectCommand  The DeleteObjectCommand class from `@aws-sdk/client-s3`.
    */
-  constructor({ bucketName, remoteDataPath, s3Client } = {}) {
+  constructor({ bucketName, remoteDataPath, s3Client, putObjectCommand } = {}) {
     if (!bucketName) throw new Error("A valid bucket name is required for AwsS3Store.");
     if (!remoteDataPath) throw new Error("A valid remote dir path is required for AwsS3Store.");
-    // if (!s3Client) throw new Error("A valid S3Client instance is required for AwsS3Store.");
+    if (!s3Client) throw new Error("A valid S3Client instance is required for AwsS3Store.");
+  
     this.bucketName = bucketName;
     this.remoteDataPath = remoteDataPath;
     this.s3Client = s3Client;
+  
+    this.putObjectCommand = putObjectCommand || PutObjectCommand; // 👈 ADD THIS
     this.debugEnabled = process.env.STORE_DEBUG === 'true';
   }
+  
 
   async isValidConfig (options) {
     if (!options.session) {
