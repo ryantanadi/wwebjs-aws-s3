@@ -82,34 +82,52 @@ class AwsS3Store {
     }
   }
 
+  // async save(options) {
+  //   this.debugLog('[METHOD: save] Triggered.');
+
+  //   if (await this.isValidConfig(options) === false) return
+
+  //   const remoteFilePath = path.join(this.remoteDataPath, `${options.session}.zip`).replace(/\\/g, '/');
+  //   options.remoteFilePath = remoteFilePath;
+    
+  //   // await this.#deletePrevious(options);
+    
+  //   try {
+  //     const fileStream = fs.createReadStream(`${options.session}.zip`);
+  //     const params = {
+  //       Bucket: this.bucketName,
+  //       Key: remoteFilePath,
+  //       Body: fileStream,
+  //       ACL: 'private',
+  //       ContentType: 'application/zip'
+  //     };
+  //     await this.s3Client.send(new PutObjectCommand(params));
+  //     this.debugLog(`[METHOD: save] File saved. PATH='${remoteFilePath}'.`);
+  //   } catch (error) {
+  //     this.debugLog(`[METHOD: save] Error: ${error.message}`);
+  //     throw error;      
+  //   }
+
+  // }
+
   async save(options) {
     this.debugLog('[METHOD: save] Triggered.');
 
-    if (await this.isValidConfig(options) === false) return
-
     const remoteFilePath = path.join(this.remoteDataPath, `${options.session}.zip`).replace(/\\/g, '/');
     options.remoteFilePath = remoteFilePath;
-    
     // await this.#deletePrevious(options);
-    
-    try {
-      const fileStream = fs.createReadStream(`${options.session}.zip`);
-      const params = {
-        Bucket: this.bucketName,
-        Key: remoteFilePath,
-        Body: fileStream,
-        ACL: 'private',
-        ContentType: 'application/zip'
-      };
-      await this.s3Client.send(new PutObjectCommand(params));
-      this.debugLog(`[METHOD: save] File saved. PATH='${remoteFilePath}'.`);
-    } catch (error) {
-      this.debugLog(`[METHOD: save] Error: ${error.message}`);
-      throw error;      
-    }
 
+    const fileStream = fs.createReadStream(`${options.session}.zip`);
+    const params = {
+      Bucket: this.bucketName,
+      Key: remoteFilePath,
+      Body: fileStream
+    };
+    await this.s3Client.send(new this.putObjectCommand(params));
+
+    this.debugLog(`[METHOD: save] File saved. PATH='${remoteFilePath}'.`);
   }
-
+  
   async extract(options) {
     this.debugLog('[METHOD: extract] Triggered.');
 
