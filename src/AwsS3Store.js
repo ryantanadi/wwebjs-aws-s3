@@ -1,14 +1,7 @@
-import path from 'path';
-import fs from 'fs';
-import {
-  S3Client,
-  ListObjectsCommand,
-  PutObjectCommand,
-  HeadObjectCommand,
-  GetObjectCommand,
-  DeleteObjectCommand
-} from '@aws-sdk/client-s3';
-
+const path = require('path');
+const fs = require('fs');
+const AWS = require('@aws-sdk/client-s3')
+const { S3Client, ListObjectsCommand, PutObjectCommand, HeadObjectCommand, GetObjectCommand, DeleteObjectCommand } = AWS
 
 class AwsS3Store {
   /**
@@ -220,9 +213,7 @@ class AwsS3Store {
   }
 }
 
-// module.exports = {
-//   AwsS3Store,
-//   S3Client
-// };
-export { AwsS3Store };
-export { S3Client } from '@aws-sdk/client-s3';
+module.exports = {
+  AwsS3Store,
+  S3Client
+};
